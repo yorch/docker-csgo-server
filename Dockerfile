@@ -2,8 +2,8 @@ FROM ubuntu:18.04
 LABEL maintainer="Max Gonzih <gonzih at gmail dot com>"
 
 ENV USER   csgo
-ENV HOME   /home/$USER
-ENV SERVER $HOME/hlserver
+ENV HOME   /home/${USER}
+ENV SERVER ${HOME}/hlserver
 
 ENV LOCALE en_US.UTF-8
 
@@ -19,27 +19,27 @@ RUN apt-get -y update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /var/cache/apt/* \
     && rm -rf /tmp/* /var/tmp/* \
-    && useradd $USER \
-    && mkdir $HOME \
-    && chown $USER:$USER $HOME \
-    && mkdir $SERVER
+    && useradd ${USER} \
+    && mkdir ${HOME} \
+    && chown ${USER}:${USER} ${HOME} \
+    && mkdir ${SERVER}
 
-ADD ./csgo_ds.txt $SERVER/csgo_ds.txt
-ADD ./update.sh $SERVER/update.sh
-ADD ./autoexec.cfg $SERVER/csgo/csgo/cfg/autoexec.cfg
-ADD ./server.cfg $SERVER/csgo/csgo/cfg/server.cfg
-ADD ./csgo.sh $SERVER/csgo.sh
+ADD ./docker/csgo_ds.txt  ${SERVER}/csgo_ds.txt
+ADD ./docker/update.sh    ${SERVER}/update.sh
+ADD ./docker/autoexec.cfg ${SERVER}/csgo/csgo/cfg/autoexec.cfg
+ADD ./docker/server.cfg   ${SERVER}/csgo/csgo/cfg/server.cfg
+ADD ./docker/csgo.sh      ${SERVER}/csgo.sh
 
-RUN chown -R $USER:$USER $SERVER
+RUN chown -R ${USER}:${USER} ${SERVER}
 
-USER $USER
+USER ${USER}
 
-RUN curl http://media.steampowered.com/client/steamcmd_linux.tar.gz | tar -C $SERVER -xvz \
-    && $SERVER/update.sh
+RUN curl -sSL http://media.steampowered.com/client/steamcmd_linux.tar.gz | tar -C ${SERVER} -xvz \
+    && ${SERVER}/update.sh
 
 EXPOSE 27015/udp
 
-WORKDIR /home/$USER/hlserver
+WORKDIR /home/${USER}/hlserver
 
 ENTRYPOINT ["./csgo.sh"]
 
