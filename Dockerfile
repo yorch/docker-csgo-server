@@ -11,8 +11,8 @@ ENV LC_ALL   ${LOCALE}
 ENV LANG     ${LOCALE}
 ENV LANGUAGE ${LOCALE}
 
-RUN apt-get -y update \
-    && apt-get -y install lib32gcc1 curl net-tools lib32stdc++6 locales \
+RUN apt-get -qqy update \
+    && apt-get -qqy install lib32gcc1 curl net-tools lib32stdc++6 locales \
     && locale-gen ${LOCALE} \
     && update-locale LANG=${LOCALE} LANGUAGE=${LOCALE} LC_ALL=${LOCALE} \
     && dpkg-reconfigure --frontend=noninteractive locales \
@@ -39,7 +39,7 @@ RUN curl -sSL http://media.steampowered.com/client/steamcmd_linux.tar.gz | tar -
 
 EXPOSE 27015/udp
 
-WORKDIR /home/${USER}/hlserver
+WORKDIR ${SERVER}
 
 ENTRYPOINT ["./csgo.sh"]
 
